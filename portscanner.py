@@ -71,7 +71,7 @@ common_services = {
 
 console = Console()
 
-# Function to validate the target (host)
+
 def validate_target(target):
     ip_regex = r"^\d{1,3}(\.\d{1,3}){3}$"  
 
@@ -92,7 +92,7 @@ def validate_target(target):
         console.print(f"[bold red]Error:[/bold red] '{target}' is not a valid hostname or IP address.")
         return False
 
-# Function to validate the port range input
+
 def validate_port_range():
     while True:
         try:
@@ -120,7 +120,7 @@ def scan_port(t_ip, port, results, progress_bar):
         s = socket(AF_INET, SOCK_STREAM)
         s.settimeout(1)
         conn = s.connect_ex((t_ip, port))
-        if conn == 0:  # Port is open
+        if conn == 0:  
             service = common_services.get(port, "Unknown Service")
             results.append((port, "OPEN", service))
         s.close()
@@ -131,7 +131,7 @@ def scan_port(t_ip, port, results, progress_bar):
     finally:
         progress_bar.update(1)
 
-# Save results to a file named after the target in the same folder as the script
+
 def save_results_to_file(results, target):
     try:
         # Replace invalid characters in the target to create a valid file name
@@ -162,18 +162,18 @@ if __name__ == "__main__":
         console.print("[bold red]WARNING:[/bold red] Use this tool only on systems you own or have explicit permission to scan.")
         console.print("[bold yellow]By proceeding, you confirm that you have the necessary authorization.[/bold yellow]\n")
         
-        # Input target (host)
+       
         target = input('Enter host for scanning: ')
 
         # Validate target (host) until it's correct
         while not validate_target(target):
             target = input('Enter host for scanning: ')
 
-        # Get IP address of the target host
+       
         t_ip = gethostbyname(target)
         console.print(f"\n[bold green]Starting scan on host:[/bold green] {t_ip}\n")
 
-        # Now validate the port range
+        
         start_port, end_port = validate_port_range()
 
         threads = []
@@ -195,7 +195,7 @@ if __name__ == "__main__":
 
         progress_bar.close()
 
-        # Display results dynamically using rich table
+       
         table = Table(title="Port Scan Results")
         table.add_column("Port", justify="right")
         table.add_column("Status", justify="center")
@@ -206,11 +206,11 @@ if __name__ == "__main__":
 
         console.print(table)
 
-       # Save results to a file named after the target
+     
         save_results_to_file(results, target)
 
     except Exception as e:
         console.print(f"[bold red]Error:[/bold red] {e}")
     
-    # Print time taken for the scan
+    
     print(f"\nTime taken: {time.time() - starttime:.2f} seconds")
